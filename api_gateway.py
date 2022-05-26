@@ -1,4 +1,3 @@
-# import contextlib
 from flask import Flask, request
 # from flask_cors import CORS, cross_origin
 import json
@@ -29,7 +28,7 @@ def questgen():
     count = 7 # if payload['count'] == '' else int(payload['count'])
     
     questions = MCQ_Generator.generate_mcq_questions(text, count)
-    result = list(map(lambda x: json.dumps(x.__dict__), questions))
+    result = list(map(lambda x: x.__dict__, questions))
 
     return json.dumps(result)
 
@@ -37,5 +36,8 @@ def questgen():
 # if __name__ == '__main__':
 #     from werkzeug.serving import run_simple
 #     run_simple('localhost', 9002, app)
+
+if __name__ == '__main__':
+    app.run(debug=True, port=9090)
 
 
