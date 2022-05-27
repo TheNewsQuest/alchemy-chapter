@@ -1,4 +1,5 @@
 from typing import List
+
 from nltk.tokenize import sent_tokenize
 import toolz
 import random

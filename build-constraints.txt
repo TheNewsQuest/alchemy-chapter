@@ -1,0 +1,3 @@
+# build version constraints for use with wheelwright + multibuild
+# https://github.com/explosion/thinc/issues/629#issuecomment-1087167085
+numpy==1.21.5

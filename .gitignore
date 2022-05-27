@@ -1,0 +1,7 @@
+# Models ignore
+app/ml_models/question_generation/models/multitask-qg-ag-v2.ckpt
+app/ml_models/sense2vec_distractor_generation/models/s2v_old/
+app/ml_models/distractor_generation/models/race-distractors.ckpt
+
+# System files
+**/.DS_Store
