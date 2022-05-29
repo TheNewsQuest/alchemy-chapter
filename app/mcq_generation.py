@@ -1,5 +1,4 @@
 from typing import List
-
 from nltk.tokenize import sent_tokenize
 import toolz
 import random
@@ -84,8 +83,7 @@ class MCQGenerator():
 
     # Modified
     def _generate_question_answer_pairs(self, context: str, desired_count: int) -> List[Question]:
-        context_splits = self._split_context_according_to_desired_count(context, desired_count*2)
-        # in case of not enough context, numbes of split * 2
+        context_splits = self._split_context_according_to_desired_count(context, desired_count)
 
         # context_splits = random.sample(context_splits, len(context_splits))
         # shuffle the splits for random qa generation
@@ -94,7 +92,7 @@ class MCQGenerator():
 
         for split in context_splits:
             answer, question = self.question_generator.generate_qna(split)
-            if (len(answer) <= 20): # short answer < 20 char
+            if (len(answer) <= 35): # short answer < 20 char
                 questions.append(Question(answer[0].upper() + answer[1:], question.strip()))
 
         questions = list(toolz.unique(questions, key=lambda x: x.answerText))
@@ -143,7 +141,7 @@ class MCQGenerator():
 
         context_splits = []
 
-        if sent_ratio < 1:
+        if sent_ratio < 4: # numbers of sentences must be 4 times that of questions
             return sents
         else:
             take_sents_count = int(sent_ratio + 1)
