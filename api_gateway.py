@@ -9,7 +9,7 @@ app = Flask(__name__)
 def questgen():
     payload = json.loads(request.data)
     text = payload['content']
-    count = 10 # if payload['count'] == '' else int(payload['count'])
+    count = 5 # if payload['count'] == '' else int(payload['count'])
     
     questions = MCQ_Generator.generate_mcq_questions(text, count)
     result = list(map(lambda x: x.__dict__, questions))
