@@ -11,10 +11,11 @@ def clean_text(text: str) -> str:
     """
     cleaned_text = _remove_brackets(text)
     cleaned_text = _remove_square_brackets(cleaned_text)
-    cleaned_text = _remove_multiple_spaces(cleaned_text)
+    cleaned_text = _replace_control_characters(cleaned_text)
     cleaned_text = _replace_weird_hyphen(cleaned_text)
+    cleaned_text = _remove_multiple_spaces(cleaned_text)
     
-    return cleaned_text
+    return cleaned_text.strip()
     
 
 def _remove_brackets(text: str) -> str:
@@ -74,3 +75,15 @@ def _replace_weird_hyphen(text: str) -> str:
         str: CLeaned text.
     """
     return text.replace('–', '-')
+
+def _replace_control_characters(text: str) -> str:
+    """ Replace '\n' '\r' '\t' with space. 
+    
+    Args:
+        text (str): The text.
+    
+    Returns:
+        str: Cleaned text.
+    """
+    regex = re.compile(r'[\n\r\t]')
+    return regex.sub(" ", text)
