@@ -2,16 +2,15 @@ version: '3.8'
 
 services:
   alchemy:
-    image: bietdoikiem/alchemy-chapter:1.0
-    container_name: alchemy-chapter
+    image: ${ALCHEMY_IMAGE}
+    container_name: alchemy
     build:
       context: .
       dockerfile: Dockerfile
-    environment:
-      - FLASK_APP=api_gateway.py
-      - FLASK_ENV=development
+    env_file:
+      - .env
     ports:
-      - 5177:5000
+      - 5077:5077
 
 networks:
   default:

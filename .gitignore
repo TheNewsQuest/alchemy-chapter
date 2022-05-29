@@ -5,3 +5,4 @@ app/ml_models/distractor_generation/models/race-distractors.ckpt
 
 # System files
 **/.DS_Store
+.env
