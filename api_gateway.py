@@ -5,15 +5,11 @@ from app.mcq_generation import MCQGenerator
 
 app = Flask(__name__)
 
-MCQ_Generator = MCQGenerator()
-
-
 @app.route("/questgen", methods=["POST"])
 def questgen():
-
     payload = json.loads(request.data)
     text = payload['content']
-    count = 5 
+    count = 10 # if payload['count'] == '' else int(payload['count'])
     
     questions = MCQ_Generator.generate_mcq_questions(text, count)
     result = list(map(lambda x: x.__dict__, questions))
@@ -21,6 +17,7 @@ def questgen():
     return jsonify(result)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    MCQ_Generator = MCQGenerator(is_verbose=True)
+    app.run(debug=True, port=9090)
 
 
