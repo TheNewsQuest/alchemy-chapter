@@ -83,24 +83,22 @@ class MCQGenerator():
 
     # Modified
     def _generate_question_answer_pairs(self, context: str, desired_count: int) -> List[Question]:
-        context_splits = self._split_context_according_to_desired_count(context, desired_count)
-
-        # context_splits = random.sample(context_splits, len(context_splits))
-        # shuffle the splits for random qa generation
+        context_splits = self._split_context_according_to_desired_count(context, desired_count*2)
+        # generate x2 questions 
 
         questions = []
 
         for split in context_splits:
             answer, question = self.question_generator.generate_qna(split)
-            if (len(answer) <= 35): # short answer < 20 char
+            if len(answer.split()) <= 5:
                 questions.append(Question(answer[0].upper() + answer[1:], question.strip()))
 
         questions = list(toolz.unique(questions, key=lambda x: x.answerText))
 
-        if len(questions) <= desired_count:
-            return questions
+        if len(questions) > desired_count:
+            return random.sample(questions, desired_count)
         else:
-            return random.sample(questions, desired_count) 
+            return questions
 
     def _generate_distractors(self, context: str, questions: List[Question]) -> List[Question]:
         for question in questions:
@@ -134,14 +132,14 @@ class MCQGenerator():
 
         return answers
 
-    #TODO: refactor to create better splits closer to the desired amount
+    # #TODO: refactor to create better splits closer to the desired amount
     def _split_context_according_to_desired_count(self, context: str, desired_count: int) -> List[str]:
         sents = sent_tokenize(context)
         sent_ratio = len(sents) / desired_count
 
         context_splits = []
 
-        if sent_ratio < 4: # numbers of sentences must be 4 times that of questions
+        if sent_ratio < 1: # numbers of sentences must be 4 times that of questions
             return sents
         else:
             take_sents_count = int(sent_ratio + 1)
@@ -155,5 +153,14 @@ class MCQGenerator():
 
         return context_splits
 
+    # return sentences only
+    # def _split_context_according_to_desired_count(self, context: str, desired_count: int) -> List[str]:
+    #     sents = sent_tokenize(context)
+    #     sent_ratio = len(sents) / desired_count
+
+    #     if sent_ratio <= 1:
+    #         return sents
+    #     else:
+    #         return random.sample(sents, desired_count)
             
     
