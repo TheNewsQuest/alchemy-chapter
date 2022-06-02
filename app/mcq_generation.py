@@ -68,7 +68,7 @@ class MCQGenerator():
 
             if len(t5_distractors) < 6:
                 s2v_distractors = self.sense2vec_distractor_generator.generate(question.answerText, 6)
-                distractors = t5_distractors + s2v_distractors
+                distractors = t5_distractors + [k[0].upper() + k[1:] for k in s2v_distractors]
             else:
                 distractors = t5_distractors
 
