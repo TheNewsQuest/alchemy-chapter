@@ -20,10 +20,6 @@ class MCQGenerator():
         start_time = time.perf_counter()
         print('Loading ML Models...') if is_verbose else ''
 
-        # Currently not used
-        # self.answer_generator = AnswerGenerator()
-        # print('Loaded AnswerGenerator in', round(time.perf_counter() - start_time, 2), 'seconds.') if is_verbose else ''
-
         self.question_generator = QuestionGenerator()
         print('Loaded QuestionGenerator in', round(time.perf_counter() - start_time, 2), 'seconds.') if is_verbose else ''
 
@@ -40,26 +36,7 @@ class MCQGenerator():
         questions = self._generate_question_answer_pairs(cleaned_text, desired_count)
         questions = self._generate_distractors(cleaned_text, questions)
 
-        # for question in questions:
-        #     print('-------------------')
-        #     print(question.answerText)
-        #     print(question.questionText)
-        #     print(question.distractors)
-
         return questions
-
-    # def _generate_answers(self, context: str, desired_count: int) -> List[Question]:
-    #     # answers = self.answer_generator.generate(context, desired_count)
-    #     answers = self._generate_multiple_answers_according_to_desired_count(context, desired_count)
-
-    #     print(answers)
-    #     unique_answers = remove_duplicates(answers)
-
-    #     questions = []
-    #     for answer in unique_answers:
-    #         questions.append(Question(answer))
-
-    #     return questions
 
     def _generate_questions(self, context: str, questions: List[Question]) -> List[Question]:        
         for question in questions:
@@ -67,24 +44,9 @@ class MCQGenerator():
 
         return questions
 
-    # Archived
-    # def _generate_question_answer_pairs(self, context: str, desired_count: int) -> List[Question]:
-    #     context_splits = self._split_context_according_to_desired_count(context, desired_count)
-
-    #     questions = []
-
-    #     for split in context_splits:
-    #         answer, question = self.question_generator.generate_qna(split)
-    #         questions.append(Question(answer.capitalize(), question))
-
-    #     questions = list(toolz.unique(questions, key=lambda x: x.answerText))
-
-    #     return questions
-
     # Modified
     def _generate_question_answer_pairs(self, context: str, desired_count: int) -> List[Question]:
-        context_splits = self._split_context_according_to_desired_count(context, desired_count*2)
-        # generate x2 questions 
+        context_splits = self._split_context_according_to_desired_count(context, desired_count*2) # generate x2 questions 
 
         questions = []
 
@@ -110,7 +72,6 @@ class MCQGenerator():
             else:
                 distractors = t5_distractors
 
-
             distractors = remove_duplicates(distractors)
             distractors = remove_distractors_duplicate_with_correct_answer(question.answerText, distractors)
             #TODO - filter distractors having a similar bleu score with another distractor
@@ -118,7 +79,7 @@ class MCQGenerator():
             if len(distractors) <= 3:
                 question.distractors = distractors
             else:
-                question.distractors = distractors[:3]
+                question.distractors = random.sample(distractors, 3)
 
         return questions
 
@@ -152,15 +113,3 @@ class MCQGenerator():
                 start_sent_index += take_sents_count - 1
 
         return context_splits
-
-    # return sentences only
-    # def _split_context_according_to_desired_count(self, context: str, desired_count: int) -> List[str]:
-    #     sents = sent_tokenize(context)
-    #     sent_ratio = len(sents) / desired_count
-
-    #     if sent_ratio <= 1:
-    #         return sents
-    #     else:
-    #         return random.sample(sents, desired_count)
-            
-    
